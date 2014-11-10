@@ -19,7 +19,6 @@ namespace kodo_js
         typedef Coder<Field, TraceTag> coder_type;
 
         auto coder_class = emscripten::class_<coder_type>(name.c_str())
-            // .function("payload_size", &coder_type::block_size)
             // .function("payload_size", &coder_type::payload_size)
             // .function("block_size", &coder_type::block_size)
             // .function("symbol_size", &coder_type::symbol_size)

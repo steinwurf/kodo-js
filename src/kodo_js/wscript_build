@@ -9,3 +9,4 @@ jslib = bld.program(
 )
 
 jslib.env.LINKFLAGS_cxxprogram += ['--bind']
+jslib.env.CXXFLAGS += ['-Wno-warn-absolute-paths']
