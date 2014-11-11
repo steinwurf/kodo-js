@@ -21,14 +21,61 @@
 
 namespace kodo_js
 {
+    template<class Encoder>
+    std::vector<uint8_t> encoder_encode(Encoder& encoder)
+    {
+        std::vector<uint8_t> payload(encoder.payload_size());
+        encoder.encode(payload.data());
+        return payload;
+    }
+
+
+
+    template<class Encoder>
+    void encoder_set_symbols(Encoder& encoder, const std::string& data)
+    {
+        auto storage = sak::const_storage(
+            (uint8_t*)data.c_str(), data.length());
+        encoder.set_symbols(storage);
+    }
+
+    template<class Encoder>
+    void encoder_set_symbol(Encoder& encoder, uint32_t index, const std::string& data)
+    {
+        auto storage = sak::const_storage(
+            (uint8_t*)data.c_str(), data.length());
+        encoder.set_symbol(index, storage);
+    }
+
+    template<class Encoder>
+    bool encoder_is_systematic_on(const Encoder& encoder)
+    {
+        return kodo::is_systematic_on(encoder);
+    }
+
+    template<class Encoder>
+    void encoder_set_systematic_on(Encoder& encoder)
+    {
+        kodo::set_systematic_on(encoder);
+    }
+
+    template<class Encoder>
+    void encoder_set_systematic_off(Encoder& encoder)
+    {
+        kodo::set_systematic_off(encoder);
+    }
+
     template<template<class, class> class Coder, class Field, class TraceTag>
     void encoder()
     {
         typedef Coder<Field, TraceTag> encoder_type;
         coder<Coder, Field, TraceTag>("encoder")
-            // .function("encode", &encode<encoder_type>)
-            // .function("set_symbols", &set_symbols<encoder_type>)
-            // .function("set_symbol", &set_symbol<encoder_type>)
+            .function("encode", &encoder_encode<encoder_type>, emscripten::allow_raw_pointers())
+            .function("set_symbols", &encoder_set_symbols<encoder_type>)
+            .function("set_symbol", &encoder_set_symbol<encoder_type>)
+            .function("is_systematic_on", &encoder_is_systematic_on<encoder_type>)
+            .function("set_systematic_on", &encoder_set_systematic_on<encoder_type>)
+            .function("set_systematic_off", &encoder_set_systematic_off<encoder_type>)
         ;
     }
 }

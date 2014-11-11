@@ -18,6 +18,8 @@
 EMSCRIPTEN_BINDINGS(kodo)
 {
 
+    emscripten::register_vector<uint8_t>("Uint8Vector");
+
     using field_type = fifi::binary;
     using trace_tag = kodo::disable_trace;
 
