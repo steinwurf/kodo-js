@@ -13,46 +13,59 @@
 
 namespace kodo_js
 {
-    template<class Coder>
-    uint32_t factory_max_symbols(Coder& coder)
+
+    template<class Factory>
+    void factory_set_symbols(Factory& factory, uint32_t symbol_size)
     {
-        return coder.max_symbols();
+        factory.set_symbols(symbol_size);
     }
 
-    template<class Coder>
-    void factory_set_symbols(Coder& coder, uint32_t symbol_size)
+    template<class Factory>
+    uint32_t factory_symbols(Factory& factory)
     {
-        coder.set_symbol_size(symbol_size);
+        return factory.symbols();
     }
 
-    template<class Coder>
-    void factory_set_symbol_size(Coder& coder, uint32_t symbol_size)
+    template<class Factory>
+    uint32_t factory_max_symbols(Factory& factory)
     {
-        coder.set_symbol_size(symbol_size);
+        return factory.max_symbols();
     }
 
-    template<class Coder>
-    uint32_t factory_max_symbol_size(Coder& coder)
+    template<class Factory>
+    void factory_set_symbol_size(Factory& factory, uint32_t symbol_size)
     {
-        return coder.max_symbol_size();
+        factory.set_symbol_size(symbol_size);
     }
 
-    template<class Coder>
-    uint32_t factory_max_payload_size(Coder& coder)
+    template<class Factory>
+    uint32_t factory_symbol_size(Factory& factory)
     {
-        return coder.max_payload_size();
+        return factory.symbol_size();
     }
 
-    template<class Coder>
-    uint32_t factory_max_block_size(Coder& coder)
+    template<class Factory>
+    uint32_t factory_max_symbol_size(Factory& factory)
     {
-        return coder.max_block_size();
+        return factory.max_symbol_size();
     }
 
-    template<class Coder>
-    typename Coder::pointer factory_build(Coder& coder)
+    template<class Factory>
+    uint32_t factory_max_payload_size(Factory& factory)
     {
-        return coder.build();
+        return factory.max_payload_size();
+    }
+
+    template<class Factory>
+    uint32_t factory_max_block_size(Factory& factory)
+    {
+        return factory.max_block_size();
+    }
+
+    template<class Factory>
+    typename Factory::pointer factory_build(Factory& factory)
+    {
+        return factory.build();
     }
 
     template<template<class, class> class Coder, class Field, class TraceTag>
@@ -64,9 +77,11 @@ namespace kodo_js
 
         class_<factory_type>((name + "_factory").c_str())
             .constructor<uint32_t, uint32_t>()
-            .function("max_symbols", &factory_max_symbols<factory_type>)
             .function("set_symbols", &factory_set_symbols<factory_type>)
+            .function("symbols", &factory_symbols<factory_type>)
+            .function("max_symbols", &factory_max_symbols<factory_type>)
             .function("set_symbol_size", &factory_set_symbol_size<factory_type>)
+            .function("symbol_size", &factory_symbol_size<factory_type>)
             .function("max_symbol_size", &factory_max_symbol_size<factory_type>)
             .function("max_payload_size", &factory_max_payload_size<factory_type>)
             .function("max_block_size", &factory_max_block_size<factory_type>)

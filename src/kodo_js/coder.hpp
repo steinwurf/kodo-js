@@ -58,11 +58,11 @@ namespace kodo_js
 
         auto coder_class = emscripten::class_<coder_type>(name.c_str())
             .template smart_ptr<std::shared_ptr<coder_type>>(name.c_str())
-            .function("payload_size", &coder_payload_size<coder_type>)
-            .function("block_size", &coder_block_size<coder_type>)
-            .function("symbol_size", &coder_symbol_size<coder_type>)
             .function("symbols", &coder_symbols<coder_type>)
+            .function("symbol_size", &coder_symbol_size<coder_type>)
             .function("rank", &coder_rank<coder_type>)
+            .function("block_size", &coder_block_size<coder_type>)
+            .function("payload_size", &coder_payload_size<coder_type>)
             .function("is_symbol_pivot", &coder_is_symbol_pivot<coder_type>)
         ;
 

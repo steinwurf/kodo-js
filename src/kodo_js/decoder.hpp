@@ -28,29 +28,18 @@ namespace kodo_js
     }
 
     template<class Decoder>
-    void decoder_decode(Decoder& decoder, std::vector<uint8_t> payload)
+    void decoder_decode(Decoder& decoder, const std::string& payload)
     {
-        decoder.decode(payload.data());
+        decoder.decode((uint8_t*)payload.c_str());
     }
 
     template<class Decoder>
     void decoder_decode_symbol(Decoder& decoder, const std::string& symbol_data,
         const std::string& symbol_coefficients)
     {
-        std::vector<uint8_t> _symbol_data(decoder.symbol_size());
-        std::vector<uint8_t> _symbol_coefficients(decoder.symbol_size());
-
-        std::copy(
-            symbol_data.c_str(),
-            symbol_data.c_str() + symbol_data.length(),
-            _symbol_data.data());
-
-        std::copy(
-            symbol_coefficients.c_str(),
-            symbol_coefficients.c_str() + symbol_coefficients.length(),
-            _symbol_coefficients.data());
-
-        decoder.decode_symbol(_symbol_data.data(), _symbol_coefficients.data());
+        decoder.decode_symbol(
+            (uint8_t*)symbol_data.c_str(),
+            (uint8_t*)symbol_coefficients.c_str());
     }
 
 
@@ -83,11 +72,11 @@ namespace kodo_js
     }
 
     template<template<class, class> class Coder, class Field, class TraceTag>
-    void decoder()
+    void decoder(const std::string& name)
     {
         typedef Coder<Field, TraceTag> decoder_type;
 
-        coder<Coder, Field, TraceTag>("decoder")
+        coder<Coder, Field, TraceTag>(std::string("decoder") + name)
             .function("recode", &decoder_recode<decoder_type>)
             .function("decode", &decoder_decode<decoder_type>)
             .function("decode_symbol", &decoder_decode_symbol<decoder_type>)

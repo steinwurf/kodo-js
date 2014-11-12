@@ -22,14 +22,12 @@
 namespace kodo_js
 {
     template<class Encoder>
-    std::vector<uint8_t> encoder_encode(Encoder& encoder)
+    std::string encoder_encode(Encoder& encoder)
     {
         std::vector<uint8_t> payload(encoder.payload_size());
         encoder.encode(payload.data());
-        return payload;
+        return std::string(payload.begin(), payload.end());
     }
-
-
 
     template<class Encoder>
     void encoder_set_symbols(Encoder& encoder, const std::string& data)
@@ -66,11 +64,11 @@ namespace kodo_js
     }
 
     template<template<class, class> class Coder, class Field, class TraceTag>
-    void encoder()
+    void encoder(const std::string& name)
     {
         typedef Coder<Field, TraceTag> encoder_type;
-        coder<Coder, Field, TraceTag>("encoder")
-            .function("encode", &encoder_encode<encoder_type>, emscripten::allow_raw_pointers())
+        coder<Coder, Field, TraceTag>(std::string("encoder") + name)
+            .function("encode", &encoder_encode<encoder_type>)
             .function("set_symbols", &encoder_set_symbols<encoder_type>)
             .function("set_symbol", &encoder_set_symbol<encoder_type>)
             .function("is_systematic_on", &encoder_is_systematic_on<encoder_type>)
