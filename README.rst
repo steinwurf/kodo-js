@@ -18,6 +18,8 @@ How to Build
 Follow this guide to download and setup emscripten standalone.
 http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html
 
+**Warning:** On some systems there are problems compiling kodo-js, with the latest emsdk
+
 Run the following waf configure command::
 
    python waf configure --options=cxx_mkspec=cxx_emscripten126,emscripten_path={path-to-emscripten}
