@@ -49,6 +49,23 @@ namespace kodo_js
         return coder.is_symbol_pivot(index);
     }
 
+    template<class Coder>
+    bool coder_has_feedback_size(Coder& coder)
+    {
+        return coder.has_feedback_size();
+    }
+
+    template<class Coder>
+    uint32_t coder_feedback_size(Coder& coder)
+    {
+        return coder.feedback_size();
+    }
+
+    template<class Coder>
+    uint32_t coder_write_payload(Coder& coder, const std::string& payload)
+    {
+        return coder.write_payload((uint8_t*)payload.c_str());
+    }
 
     template<template<class, class> class Coder, class Field, class TraceTag>
     auto coder(const std::string& name) ->
@@ -64,6 +81,8 @@ namespace kodo_js
             .function("block_size", &coder_block_size<coder_type>)
             .function("payload_size", &coder_payload_size<coder_type>)
             .function("is_symbol_pivot", &coder_is_symbol_pivot<coder_type>)
+            .function("has_feedback_size", &coder_has_feedback_size<coder_type>)
+            .function("write_payload", &coder_write_payload<coder_type>)
         ;
 
         return coder_class;

@@ -52,3 +52,6 @@ local.properties
 *.opensdf
 *.log
 VSProjects
+
+# special config files
+configure.sh
