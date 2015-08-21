@@ -61,7 +61,6 @@ def options(opt):
         git_repository='github.com/steinwurf/meta.git',
         major_version=1))
 
-
     bundle.add_dependency(opt, resolve.ResolveGitMajorVersion(
         name='waf-tools',
         git_repository='github.com/steinwurf/waf-tools.git',
