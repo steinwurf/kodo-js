@@ -128,11 +128,13 @@ namespace kodo_js
     }
 
 
-    template<template<class, class> class Coder, class Field, class TraceTag>
+    template<template<class> class Field>
     void encoder(const std::string& name)
     {
-        typedef Coder<Field, TraceTag> encoder_type;
-        coder<Coder, Field, TraceTag>(std::string("encoder") + name)
+        // typedef Coder<Field, TraceTag> encoder_type;
+        // coder<Coder, Field, TraceTag>(std::string("encoder") + name)
+         typedef Coder<Field> encoder_type;
+         coder<Coder, Field>(std::string("encoder") + name)
             // .function("encode", &encoder_encode<encoder_type>)
             .function("set_symbols", &encoder_set_symbols<encoder_type>)
             .function("set_symbol", &encoder_set_symbol<encoder_type>)

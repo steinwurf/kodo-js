@@ -19,13 +19,6 @@ EMSCRIPTEN_BINDINGS(kodo)
 {
     {
         using field_type = fifi::binary;
-        //using trace_tag = kodo::disable_trace;
-
-        // kodo_js::factory<kodo::full_rlnc_encoder, field_type, trace_tag>("encoder");
-        // kodo_js::encoder<kodo::full_rlnc_encoder, field_type, trace_tag>("");
-
-        // kodo_js::factory<kodo::full_rlnc_decoder, field_type, trace_tag>("decoder");
-        // kodo_js::decoder<kodo::full_rlnc_decoder, field_type, trace_tag>("");
 
         kodo_js::factory<kodo::rlnc::full_vector_encoder, field_type>("encoder");
         kodo_js::encoder<kodo::rlnc::full_vector_encoder, field_type>("");

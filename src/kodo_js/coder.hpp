@@ -67,11 +67,12 @@ namespace kodo_js
         return coder.write_payload((uint8_t*)payload.c_str());
     }
 
-    template<template<class, class> class Coder, class Field, class TraceTag>
-    auto coder(const std::string& name) ->
-        emscripten::class_<Coder<Field, TraceTag>>
+    //template<class Coder<class Field>>
+    template<template<class> Coder, class Field>
+    auto coder(const std::string& name)
     {
-        typedef Coder<Field, TraceTag> coder_type;
+        // typedef Coder<Field, TraceTag> coder_type;
+        typedef Coder<Field> coder_type;
 
         auto coder_class = emscripten::class_<coder_type>(name.c_str())
             .template smart_ptr<std::shared_ptr<coder_type>>(name.c_str())

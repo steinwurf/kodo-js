@@ -100,12 +100,15 @@ namespace kodo_js
         decoder.write_feedback((uint8_t)*feedback.c_str());
     }
 
-    template<template<class, class> class Coder, class Field, class TraceTag>
+    template<template<class> class Field>
     void decoder(const std::string& name)
     {
-        typedef Coder<Field, TraceTag> decoder_type;
+        // typedef Coder<Field, TraceTag> decoder_type;
 
-        coder<Coder, Field, TraceTag>(std::string("decoder") + name)
+        // coder<Coder, Field, TraceTag>(std::string("decoder") + name)
+        typedef Coder<Field> decoder_type;
+
+        coder<Coder, Field>(std::string("decoder") + name)
             // .function("recode", &decoder_recode<decoder_type>)
             // .function("decode", &decoder_decode<decoder_type>)
             // .function("decode_symbol", &decoder_decode_symbol<decoder_type>)

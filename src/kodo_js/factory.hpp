@@ -68,12 +68,12 @@ namespace kodo_js
         return factory.build();
     }
 
-    template<template<class, class> class Coder, class Field, class TraceTag>
+    template<template<class> class Field>
     void factory(const std::string& name)
     {
         using namespace emscripten;
 
-        typedef typename Coder<Field, TraceTag>::factory factory_type;
+        typedef typename Coder<Field>::factory factory_type;
 
         class_<factory_type>((name + "_factory").c_str())
             .constructor<uint32_t, uint32_t>()
