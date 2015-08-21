@@ -68,8 +68,9 @@ namespace kodo_js
     }
 
     //template<class Coder<class Field>>
-    template<template<class Field, class Features = meta::typelist<>, class... Interfaces> class Coder, class Field>
-    auto coder(const std::string& name)
+    template<template<class> class Coder, class Field>
+    auto coder(const std::string& name) ->
+        emscripten::class_<Coder<Field>>
     {
         // typedef Coder<Field, TraceTag> coder_type;
         typedef Coder<Field> coder_type;
