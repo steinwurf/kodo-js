@@ -50,29 +50,31 @@ namespace kodo_js
     template<class Encoder>
     bool encoder_is_systematic_on(const Encoder& encoder)
     {
-        return kodo::is_systematic_on(encoder);
+        return kodo::is_systematic_on(*encoder);
     }
 
     template<class Encoder>
     void encoder_set_systematic_on(Encoder& encoder)
     {
-        kodo::set_systematic_on(encoder);
+        kodo::set_systematic_on(*encoder);
     }
 
     template<class Encoder>
     void encoder_set_systematic_off(Encoder& encoder)
     {
-        kodo::set_systematic_off(encoder);
+        kodo::set_systematic_off(*encoder);
     }
 
     template<class Encoder>
-    bool encoder_has_set_systematic_off(Encoder& encoder)
+    //    bool encoder_has_set_systematic_off(Encoder& encoder)
+    bool encoder_has_set_systematic_off()
     {
-        kodo::has_set_systematic_off(encoder);
+//        kodo::has_set_systematic_off(*encoder);
+        return kodo::has_set_systematic_off<Encoder>::value;
     }
 
     template<class Encoder>
-    uint32_t encoder_width(Encoder& ecoder)
+    uint32_t encoder_width(Encoder& encoder)
     {
         return encoder.width();
     }
@@ -108,7 +110,7 @@ namespace kodo_js
     }
 
     template<class Encoder>
-    void encoder_set_pseudo_systematic(Encoder& encoder, bool pseduo_systematic)
+    void encoder_set_pseudo_systematic(Encoder& encoder, bool pseudo_systematic)
     {
         encoder.set_pseudo_systematic(pseudo_systematic);
     }
@@ -122,7 +124,7 @@ namespace kodo_js
     template<class Encoder>
     void encoder_set_pre_charging(Encoder& encoder, bool pre_charging)
     {
-        encoder.set_pre_charging();
+        encoder.set_pre_charging(pre_charging);
     }
 
 
