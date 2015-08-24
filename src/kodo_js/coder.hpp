@@ -7,6 +7,7 @@
 
 #include <emscripten/bind.h>
 #include <kodo/enable_trace.hpp>
+#include <kodo/has_feedback_size.hpp>
 
 #include <iostream>
 
@@ -50,12 +51,6 @@ namespace kodo_js
     }
 
     template<class Coder>
-    bool coder_has_feedback_size(Coder& coder)
-    {
-        return coder.has_feedback_size();
-    }
-
-    template<class Coder>
     uint32_t coder_feedback_size(Coder& coder)
     {
         return coder.feedback_size();
@@ -68,12 +63,12 @@ namespace kodo_js
     }
 
     //template<class Coder<class Field>>
-    template<template<class> class Coder, class Field>
+    template<template<class, class> class Coder, class Field>
     auto coder(const std::string& name) ->
-        emscripten::class_<Coder<Field>>
+        emscripten::class_<Coder<Field, meta::typelist<>>>
     {
         // typedef Coder<Field, TraceTag> coder_type;
-        typedef Coder<Field> coder_type;
+        typedef Coder<Field, meta::typelist<>> coder_type;
 
         auto coder_class = emscripten::class_<coder_type>(name.c_str())
             .template smart_ptr<std::shared_ptr<coder_type>>(name.c_str())
@@ -83,7 +78,6 @@ namespace kodo_js
             .function("block_size", &coder_block_size<coder_type>)
             .function("payload_size", &coder_payload_size<coder_type>)
             .function("is_symbol_pivot", &coder_is_symbol_pivot<coder_type>)
-            .function("has_feedback_size", &coder_has_feedback_size<coder_type>)
             .function("write_payload", &coder_write_payload<coder_type>)
         ;
 

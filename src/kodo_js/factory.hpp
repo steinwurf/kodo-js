@@ -68,19 +68,18 @@ namespace kodo_js
         return factory.build();
     }
 
-    template<template<class> class Coder, class Field>
+    template<template<class, class> class Coder, class Field>
     void factory(const std::string& name)
     {
         using namespace emscripten;
 
-        typedef typename Coder<Field>::factory factory_type;
+        typedef typename Coder<Field, meta::typelist<>>::factory factory_type;
 
         class_<factory_type>((name + "_factory").c_str())
             .constructor<uint32_t, uint32_t>()
             .function("set_symbols", &factory_set_symbols<factory_type>)
             .function("symbols", &factory_symbols<factory_type>)
             .function("max_symbols", &factory_max_symbols<factory_type>)
-
             .function("set_symbol_size", &factory_set_symbol_size<factory_type>)
             .function("symbol_size", &factory_symbol_size<factory_type>)
             .function("max_symbol_size", &factory_max_symbol_size<factory_type>)
