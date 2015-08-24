@@ -21,14 +21,6 @@
 namespace kodo_js
 {
     template<class Encoder>
-    std::string encoder_write_payload(Encoder& encoder)
-    {
-        std::vector<uint8_t> payload(encoder.payload_size());
-        encoder.write_payload(payload.data());
-        return std::string(payload.begin(), payload.end());
-    }
-
-    template<class Encoder>
     void encoder_set_symbols(Encoder& encoder, const std::string& data)
     {
         auto storage = sak::const_storage(
@@ -74,7 +66,6 @@ namespace kodo_js
     {
         typedef Coder<Field, meta::typelist<>> encoder_type;
          coder<Coder, Field>(std::string("encoder") + name)
-            .function("encode", &encoder_write_payload<encoder_type>)
             .function("set_symbols", &encoder_set_symbols<encoder_type>)
             .function("set_symbol", &encoder_set_symbol<encoder_type>)
             .function("is_systematic_on", &encoder_is_systematic_on<encoder_type>)

@@ -13,6 +13,14 @@
 
 namespace kodo_js
 {
+    template<class Coder>
+    std::string coder_write_payload(Coder& coder)
+    {
+        std::vector<uint8_t> payload(coder.payload_size());
+        coder.write_payload(payload.data());
+        return std::string(payload.begin(), payload.end());
+    }
+
 
     template<class Coder>
     uint32_t coder_payload_size(Coder& coder)
@@ -56,12 +64,6 @@ namespace kodo_js
         return coder.feedback_size();
     }
 
-    template<class Coder>
-    uint32_t coder_write_payload(Coder& coder, const std::string& payload)
-    {
-        return coder.write_payload((uint8_t*)payload.c_str());
-    }
-
     //template<class Coder<class Field>>
     template<template<class, class> class Coder, class Field>
     auto coder(const std::string& name) ->
@@ -72,13 +74,13 @@ namespace kodo_js
 
         auto coder_class = emscripten::class_<coder_type>(name.c_str())
             .template smart_ptr<std::shared_ptr<coder_type>>(name.c_str())
+            .function("write_payload", &coder_write_payload<coder_type>)
             .function("symbols", &coder_symbols<coder_type>)
             .function("symbol_size", &coder_symbol_size<coder_type>)
             .function("rank", &coder_rank<coder_type>)
             .function("block_size", &coder_block_size<coder_type>)
             .function("payload_size", &coder_payload_size<coder_type>)
             .function("is_symbol_pivot", &coder_is_symbol_pivot<coder_type>)
-            .function("write_payload", &coder_write_payload<coder_type>)
         ;
 
         return coder_class;
