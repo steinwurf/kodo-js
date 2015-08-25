@@ -9,7 +9,6 @@
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/set_systematic_on.hpp>
 #include <kodo/write_feedback.hpp>
-#include <kodo/rlnc/sparse_full_vector_encoder.hpp>
 
 #include <string>
 #include <vector>
