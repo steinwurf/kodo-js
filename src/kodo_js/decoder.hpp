@@ -63,7 +63,7 @@ namespace kodo_js
     template<template<class, class> class Coder, class Field>
     void decoder(const std::string& name)
     {
-        typedef Coder<Field, meta::typelist<>> decoder_type;
+        using decoder_type = Coder<Field, meta::typelist<>>;
 
         coder<Coder, Field>(std::string("decoder") + name)
             .function("is_complete", &decoder_is_complete<decoder_type>)

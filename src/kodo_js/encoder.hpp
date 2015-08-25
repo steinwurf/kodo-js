@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include <kodo/has_set_systematic_off.hpp>
-#include <kodo/has_set_systematic_on.hpp>
 #include <kodo/is_systematic_on.hpp>
 #include <kodo/set_systematic_off.hpp>
 #include <kodo/set_systematic_on.hpp>
@@ -54,24 +52,16 @@ namespace kodo_js
         kodo::set_systematic_off(encoder);
     }
 
-    template<class Encoder>
-    bool encoder_has_set_systematic_off(Encoder& encoder)
-    {
-        (void) encoder;
-        return kodo::has_set_systematic_off<Encoder>::value;
-    }
-
     template<template<class, class> class Coder, class Field>
     void encoder(const std::string& name)
     {
-        typedef Coder<Field, meta::typelist<>> encoder_type;
+        using encoder_type = Coder<Field, meta::typelist<>>;
          coder<Coder, Field>(std::string("encoder") + name)
             .function("set_symbols", &encoder_set_symbols<encoder_type>)
             .function("set_symbol", &encoder_set_symbol<encoder_type>)
             .function("is_systematic_on", &encoder_is_systematic_on<encoder_type>)
             .function("set_systematic_on", &encoder_set_systematic_on<encoder_type>)
             .function("set_systematic_off", &encoder_set_systematic_off<encoder_type>)
-            .function("has_set_systematic_off", &encoder_has_set_systematic_off<encoder_type>)
         ;
     }
 }

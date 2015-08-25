@@ -7,7 +7,6 @@
 
 #include <emscripten/bind.h>
 #include <kodo/enable_trace.hpp>
-#include <kodo/has_feedback_size.hpp>
 
 #include <iostream>
 
@@ -64,13 +63,11 @@ namespace kodo_js
         return coder.feedback_size();
     }
 
-    //template<class Coder<class Field>>
     template<template<class, class> class Coder, class Field>
     auto coder(const std::string& name) ->
         emscripten::class_<Coder<Field, meta::typelist<>>>
     {
-        // typedef Coder<Field, TraceTag> coder_type;
-        typedef Coder<Field, meta::typelist<>> coder_type;
+        using coder_type = Coder<Field, meta::typelist<>>;
 
         auto coder_class = emscripten::class_<coder_type>(name.c_str())
             .template smart_ptr<std::shared_ptr<coder_type>>(name.c_str())

@@ -53,5 +53,3 @@ local.properties
 *.log
 VSProjects
 
-# special config files
-configure.sh

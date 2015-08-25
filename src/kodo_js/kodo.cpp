@@ -9,7 +9,6 @@
 
 #include <kodo/rlnc/full_vector_decoder.hpp>
 #include <kodo/rlnc/full_vector_encoder.hpp>
-// #include <kodo/disable_trace.hpp> -- update
 
 #include "decoder.hpp"
 #include "encoder.hpp"
