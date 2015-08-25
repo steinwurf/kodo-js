@@ -185,14 +185,14 @@ context("kodo",
         number_of_packets = 0
         while(!decoder.is_complete())
         {
-            packet = encoder.encode()
+            packet = encoder.write_payload()
             number_of_packets += 1
-            decoder.decode(packet)
+            decoder.read_payload(packet)
 
             // Make sure we don't get an infinite loop.
             assert.isTrue(number_of_packets <= symbols)
         }
-        data_out = decoder.copy_symbols()
+        data_out = decoder.copy_from_symbols()
         assert.arrayEqual(data_in, data_out)
     })
 )

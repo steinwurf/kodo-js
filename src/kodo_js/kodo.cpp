@@ -1,4 +1,4 @@
-// Copyright Steinwurf ApS 2011-2013.
+// Copyright Steinwurf ApS 2015.
 // Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
 // See accompanying file LICENSE.rst or
 // http://www.steinwurf.com/licensing
@@ -7,9 +7,8 @@
 
 #include <fifi/binary.hpp>
 
-#include <kodo/rlnc/full_rlnc_decoder.hpp>
-#include <kodo/rlnc/full_rlnc_encoder.hpp>
-#include <kodo/disable_trace.hpp>
+#include <kodo/rlnc/full_vector_decoder.hpp>
+#include <kodo/rlnc/full_vector_encoder.hpp>
 
 #include "decoder.hpp"
 #include "encoder.hpp"
@@ -19,12 +18,11 @@ EMSCRIPTEN_BINDINGS(kodo)
 {
     {
         using field_type = fifi::binary;
-        using trace_tag = kodo::disable_trace;
 
-        kodo_js::factory<kodo::full_rlnc_encoder, field_type, trace_tag>("encoder");
-        kodo_js::encoder<kodo::full_rlnc_encoder, field_type, trace_tag>("");
+        kodo_js::factory<kodo::rlnc::full_vector_encoder, field_type>("encoder");
+        kodo_js::encoder<kodo::rlnc::full_vector_encoder, field_type>("");
 
-        kodo_js::factory<kodo::full_rlnc_decoder, field_type, trace_tag>("decoder");
-        kodo_js::decoder<kodo::full_rlnc_decoder, field_type, trace_tag>("");
+        kodo_js::factory<kodo::rlnc::full_vector_decoder, field_type>("decoder");
+        kodo_js::decoder<kodo::rlnc::full_vector_decoder, field_type>("");
     }
 }
