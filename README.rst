@@ -15,17 +15,28 @@ us at our developer mailing list (hosted at Google Groups):
 How to Build
 ============
 
-Follow this guide to download and setup emscripten standalone.
+Follow this guide to download and setup the Portable Emscripten SDK:
 http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html
 
-**Warning:** On some systems there are problems compiling kodo-js, with the latest emsdk
+Note that Emscripten is not compatible with Python 3, always use Python 2.7
+when running the SDK commands and the compiler.
 
-Run the following waf configure command::
+On Ubuntu and Debian, the Node.js binary is called ``nodejs`` (not ``node``),
+so you need to change the following line in ``~/.emscripten`` (the file is
+created when you run ``./emsdk activate latest``)::
 
-   python waf configure --options=cxx_mkspec=cxx_emscripten126,emscripten_path={path-to-emscripten}
+    NODE_JS = 'node'
 
-Where *path-to-emscripten* could be ``~/dev/emsdk_portable/emscripten/master/``.
+To this::
 
-Build and run unit tests using waf::
+    NODE_JS = 'nodejs'
 
-   python waf --options=run_tests,run_always
+Now you should be able to configure kodo-js::
+
+    python waf configure --options=cxx_mkspec=cxx_default_emscripten,emscripten_path="path-to-emscripten"
+
+For example, *path-to-emscripten* can be: ``~/emsdk_portable/emscripten/tag-1.34.7``
+
+Build and run the unit tests using waf::
+
+    python waf --options=run_tests,run_always
