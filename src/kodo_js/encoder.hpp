@@ -18,19 +18,20 @@
 namespace kodo_js
 {
     template<class Encoder>
-    void encoder_set_symbols(Encoder& encoder, const std::string& data)
+    void encoder_set_const_symbols(Encoder& encoder, const std::string& data)
     {
-        auto storage = sak::const_storage(
-            (uint8_t*)data.c_str(), data.length());
-        encoder.set_symbols(storage);
+        auto storage =
+            sak::const_storage((uint8_t*)data.c_str(), data.length());
+        encoder.set_const_symbols(storage);
     }
 
     template<class Encoder>
-    void encoder_set_symbol(Encoder& encoder, uint32_t index, const std::string& data)
+    void encoder_set_const_symbol(Encoder& encoder, uint32_t index,
+                                  const std::string& data)
     {
         auto storage = sak::const_storage(
             (uint8_t*)data.c_str(), data.length());
-        encoder.set_symbol(index, storage);
+        encoder.set_const_symbol(index, storage);
     }
 
     template<class Encoder>
@@ -56,8 +57,8 @@ namespace kodo_js
     {
         using encoder_type = Coder<Field, meta::typelist<>>;
          coder<Coder, Field>(std::string("encoder") + name)
-            .function("set_symbols", &encoder_set_symbols<encoder_type>)
-            .function("set_symbol", &encoder_set_symbol<encoder_type>)
+            .function("set_const_symbols", &encoder_set_const_symbols<encoder_type>)
+            .function("set_const_symbol", &encoder_set_const_symbol<encoder_type>)
             .function("is_systematic_on", &encoder_is_systematic_on<encoder_type>)
             .function("set_systematic_on", &encoder_set_systematic_on<encoder_type>)
             .function("set_systematic_off", &encoder_set_systematic_off<encoder_type>)

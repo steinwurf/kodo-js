@@ -20,7 +20,6 @@ namespace kodo_js
         return std::string(payload.begin(), payload.end());
     }
 
-
     template<class Coder>
     uint32_t coder_payload_size(Coder& coder)
     {
