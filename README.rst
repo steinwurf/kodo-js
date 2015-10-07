@@ -33,10 +33,10 @@ To this::
 
 Now you should be able to configure kodo-js::
 
-    python waf configure --options=cxx_mkspec=cxx_default_emscripten,emscripten_path="path-to-emscripten"
+    python waf configure --cxx_mkspec=cxx_default_emscripten --emscripten_path="path-to-emscripten"
 
 For example, *path-to-emscripten* can be: ``~/emsdk_portable/emscripten/tag-1.34.7``
 
 Build and run the unit tests using waf::
 
-    python waf --options=run_tests,run_always
+    python waf --run_tests
