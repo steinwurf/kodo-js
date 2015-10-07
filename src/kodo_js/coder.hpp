@@ -62,7 +62,7 @@ namespace kodo_js
         return coder.feedback_size();
     }
 
-    template<template<class, class> class Coder, class Field>
+    template<template<class, class, class...> class Coder, class Field>
     auto coder(const std::string& name) ->
         emscripten::class_<Coder<Field, meta::typelist<>>>
     {

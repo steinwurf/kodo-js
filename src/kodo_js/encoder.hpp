@@ -29,8 +29,8 @@ namespace kodo_js
     void encoder_set_const_symbol(Encoder& encoder, uint32_t index,
                                   const std::string& data)
     {
-        auto storage = sak::const_storage(
-            (uint8_t*)data.c_str(), data.length());
+        auto storage =
+            sak::const_storage((uint8_t*)data.c_str(), data.length());
         encoder.set_const_symbol(index, storage);
     }
 
@@ -52,7 +52,7 @@ namespace kodo_js
         kodo::set_systematic_off(encoder);
     }
 
-    template<template<class, class> class Coder, class Field>
+    template<template<class, class, class...> class Coder, class Field>
     void encoder(const std::string& name)
     {
         using encoder_type = Coder<Field, meta::typelist<>>;

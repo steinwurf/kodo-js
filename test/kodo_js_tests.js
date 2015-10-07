@@ -36,7 +36,7 @@ function create_factory_test(name, factory_type) {
             assert.equal(symbols, factory.max_symbols())
             assert.equal(symbols, factory.symbols())
             symbols2 = 4
-            factory.set_symbols(symbols2)
+            factory.set_const_symbols(symbols2)
             assert.equal(symbols2, factory.symbols())
         }),
         should("return the right symbol size", function() {
@@ -137,11 +137,11 @@ function create_encoder_test() {
 // should("encode", function() {
 //     coder.encode()
 // }),
-// should("set_symbols", function() {
-//     coder.set_symbols()
+// should("set_const_symbols", function() {
+//     coder.set_const_symbols()
 // }),
-// should("set_symbol", function() {
-//     coder.set_symbol()
+// should("set_const_symbol", function() {
+//     coder.set_const_symbol()
 // }),
 
 context("kodo",
@@ -180,7 +180,7 @@ context("kodo",
 
         // Assign the data buffer to the encoder so that we can
         // produce encoded symbols
-        encoder.set_symbols(data_in)
+        encoder.set_const_symbols(data_in)
 
         number_of_packets = 0
         while(!decoder.is_complete())
