@@ -137,11 +137,11 @@ function create_encoder_test() {
 // should("encode", function() {
 //     coder.encode()
 // }),
-// should("set_symbols", function() {
-//     coder.set_symbols()
+// should("set_const_symbols", function() {
+//     coder.set_const_symbols()
 // }),
-// should("set_symbol", function() {
-//     coder.set_symbol()
+// should("set_const_symbol", function() {
+//     coder.set_const_symbol()
 // }),
 
 context("kodo",
@@ -180,7 +180,7 @@ context("kodo",
 
         // Assign the data buffer to the encoder so that we can
         // produce encoded symbols
-        encoder.set_symbols(data_in)
+        encoder.set_const_symbols(data_in)
 
         number_of_packets = 0
         while(!decoder.is_complete())

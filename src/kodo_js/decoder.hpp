@@ -60,7 +60,7 @@ namespace kodo_js
         return decoder.symbols_seen();
     }
 
-    template<template<class, class> class Coder, class Field>
+    template<template<class, class, class...> class Coder, class Field>
     void decoder(const std::string& name)
     {
         using decoder_type = Coder<Field, meta::typelist<>>;

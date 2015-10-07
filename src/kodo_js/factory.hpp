@@ -68,7 +68,7 @@ namespace kodo_js
         return factory.build();
     }
 
-    template<template<class, class> class Coder, class Field>
+    template<template<class, class, class...> class Coder, class Field>
     void factory(const std::string& name)
     {
         using namespace emscripten;
