@@ -36,7 +36,7 @@ function create_factory_test(name, factory_type) {
             assert.equal(symbols, factory.max_symbols())
             assert.equal(symbols, factory.symbols())
             symbols2 = 4
-            factory.set_const_symbols(symbols2)
+            factory.set_symbols(symbols2)
             assert.equal(symbols2, factory.symbols())
         }),
         should("return the right symbol size", function() {
