@@ -31,8 +31,10 @@ To this::
 
     NODE_JS = 'nodejs'
 
-Now you should be able to configure kodo-js::
+Now you should be able to clone and configure kodo-js::
 
+    git clone git@github.com:steinwurf/kodo-js.git
+    cd kodo-js
     python waf configure --cxx_mkspec=cxx_default_emscripten --emscripten_path="path-to-emscripten"
 
 For example, *path-to-emscripten* can be: ``~/emsdk_portable/emscripten/tag-1.34.7``
