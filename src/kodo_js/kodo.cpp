@@ -7,8 +7,8 @@
 
 #include <fifi/binary.hpp>
 
-#include <kodo/rlnc/full_vector_decoder.hpp>
-#include <kodo/rlnc/full_vector_encoder.hpp>
+#include <kodo_rlnc/full_vector_decoder.hpp>
+#include <kodo_rlnc/full_vector_encoder.hpp>
 
 #include "decoder.hpp"
 #include "encoder.hpp"
@@ -19,10 +19,10 @@ EMSCRIPTEN_BINDINGS(kodo)
     {
         using field_type = fifi::binary;
 
-        kodo_js::factory<kodo::rlnc::full_vector_encoder, field_type>("encoder");
-        kodo_js::encoder<kodo::rlnc::full_vector_encoder, field_type>("");
+        kodo_js::factory<kodo_rlnc::full_vector_encoder, field_type>("encoder");
+        kodo_js::encoder<kodo_rlnc::full_vector_encoder, field_type>("");
 
-        kodo_js::factory<kodo::rlnc::full_vector_decoder, field_type>("decoder");
-        kodo_js::decoder<kodo::rlnc::full_vector_decoder, field_type>("");
+        kodo_js::factory<kodo_rlnc::full_vector_decoder, field_type>("decoder");
+        kodo_js::decoder<kodo_rlnc::full_vector_decoder, field_type>("");
     }
 }

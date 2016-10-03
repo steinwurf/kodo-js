@@ -9,7 +9,7 @@ project_name = 'kodo-js'
 project_dependencies = \
     [
         'waf-tools',
-        'gtest',
+        'kodo-rlnc',
     ]
 
 # Importing a dynamically generated module
