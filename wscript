@@ -27,9 +27,9 @@ def resolve(ctx):
         major=3))
 
     ctx.add_dependency(resolve.ResolveVersion(
-        name='kodo',
-        git_repository='github.com/steinwurf/kodo.git',
-        major=32))
+        name='kodo-rlnc',
+        git_repository='github.com/steinwurf/kodo-rlnc.git',
+        major=4))
 
 
 def configure(conf):

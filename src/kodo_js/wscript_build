@@ -5,7 +5,7 @@ jslib = bld.program(
     features='javascript cxx',
     source=bld.path.ant_glob('**/*.cpp'),
     target='kodo',
-    use=['kodo_includes'],
+    use=['kodo_rlnc_includes'],
     export_includes=['..'])
 
 jslib.env.LINKFLAGS_cxxprogram += ['--bind']
