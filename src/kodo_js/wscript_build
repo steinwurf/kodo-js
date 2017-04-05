@@ -3,7 +3,7 @@
 
 bld.program(
     features='cxx',
-    source=bld.path.ant_glob('**/*.cpp'),
+    source=['kodo.cpp'],
     target='kodo',
     cxxflags=['-Wno-warn-absolute-paths'],
     linkflags=['--bind'],
