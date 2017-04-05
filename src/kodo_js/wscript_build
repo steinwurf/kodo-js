@@ -1,12 +1,13 @@
 #! /usr/bin/env python
 # encoding: utf-8
 
-jslib = bld.program(
+bld.program(
     features='javascript cxx',
     source=bld.path.ant_glob('**/*.cpp'),
     target='kodo',
+    cxxflags=['-Wno-warn-absolute-paths'],
+    linkflags=['--bind'],
     use=['kodo_rlnc_includes'],
     export_includes=['..'])
 
-jslib.env.LINKFLAGS_cxxprogram += ['--bind']
-jslib.env.CXXFLAGS += ['-Wno-warn-absolute-paths']
+
