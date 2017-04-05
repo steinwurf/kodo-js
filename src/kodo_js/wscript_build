@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 bld.program(
-    features='javascript cxx',
+    features='cxx',
     source=bld.path.ant_glob('**/*.cpp'),
     target='kodo',
     cxxflags=['-Wno-warn-absolute-paths'],
