@@ -6,6 +6,8 @@ every change, see the Git log.
 
 Latest
 ------
+* Major: Upgrade to waf-tools 4
+* Major: Upgrade to kodo-rlnc 6
 * Major: Upgrade to kodo-rlnc 4
 * Major: Renamed ``symbols_seen`` to ``symbols_partially_decoded``.
 * Major: Upgrade to waf-tools 3
