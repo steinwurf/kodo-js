@@ -6,6 +6,11 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+1.0.0
+-----
+* Major: Upgrade to kodo-rlnc 7
 * Major: Upgrade to waf-tools 4
 * Major: Upgrade to kodo-rlnc 6
 * Major: Upgrade to kodo-rlnc 4
