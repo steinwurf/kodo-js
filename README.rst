@@ -28,7 +28,7 @@ the ``python2`` command on your system, just write ``python`` instead)::
     cd kodo-js
     python2 waf configure --cxx_mkspec=cxx_default_emscripten --emscripten_path="path-to-emscripten"
 
-For example, *path-to-emscripten* can be: ``~/emsdk_portable/emscripten/1.37.22``
+For example, *path-to-emscripten* can be: ``~/emsdk-portable/emscripten/1.37.22``
 
 Build and run the unit tests using waf::
 
