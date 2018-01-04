@@ -7,7 +7,7 @@ This project contains emscripten bindings for the Kodo library.
 .. contents:: Table of Contents:
    :local:
 
-If you have any questions or suggestions about this library, please contact
+If you have any questions about this library, please contact
 us at our developer mailing list (hosted at Google Groups):
 
 * http://groups.google.com/group/steinwurf-dev

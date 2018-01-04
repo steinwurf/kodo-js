@@ -8,10 +8,6 @@
 #include <string>
 #include <vector>
 
-#include <kodo_core/has_partial_decoding_tracker.hpp>
-#include <kodo_core/is_partially_complete.hpp>
-#include <kodo_core/write_feedback.hpp>
-
 #include "coder.hpp"
 
 namespace kodo_js
@@ -56,19 +52,17 @@ uint32_t decoder_symbols_partially_decoded(Decoder& decoder)
     return decoder.symbols_partially_decoded();
 }
 
-template<template<class, class, class...> class Coder, class Field>
+template<class Coder>
 void decoder(const std::string& name)
 {
-    using decoder_type = Coder<Field, meta::typelist<>>;
-
-    coder<Coder, Field>(std::string("decoder") + name)
-    .function("is_complete", &decoder_is_complete<decoder_type>)
-    .function("symbols_uncoded", &decoder_symbols_uncoded<decoder_type>)
-    .function("copy_from_symbols", &decoder_copy_from_symbols<decoder_type>)
-    .function("is_symbol_uncoded", &decoder_is_symbol_uncoded<decoder_type>)
-    .function("read_payload", &decoder_read_payload<decoder_type>)
+    coder<Coder>(std::string("decoder") + name)
+    .function("is_complete", &decoder_is_complete<Coder>)
+    .function("symbols_uncoded", &decoder_symbols_uncoded<Coder>)
+    .function("copy_from_symbols", &decoder_copy_from_symbols<Coder>)
+    .function("is_symbol_uncoded", &decoder_is_symbol_uncoded<Coder>)
+    .function("read_payload", &decoder_read_payload<Coder>)
     .function("symbols_partially_decoded",
-              &decoder_symbols_partially_decoded<decoder_type>)
+              &decoder_symbols_partially_decoded<Coder>)
     ;
 }
 }

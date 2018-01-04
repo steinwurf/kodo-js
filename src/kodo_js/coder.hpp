@@ -48,33 +48,23 @@ uint32_t coder_rank(Coder& coder)
 }
 
 template<class Coder>
-bool coder_is_symbol_pivot(Coder& coder, uint32_t index)
-{
-    return coder.is_symbol_pivot(index);
-}
-
-template<class Coder>
 uint32_t coder_feedback_size(Coder& coder)
 {
     return coder.feedback_size();
 }
 
-template<template<class, class, class...> class Coder, class Field>
-auto coder(const std::string& name) ->
-    emscripten::class_<Coder<Field, meta::typelist<>>>
+template<class Coder>
+auto coder(const std::string& name) -> emscripten::class_<Coder>
 {
-    using coder_type = Coder<Field, meta::typelist<>>;
-
     auto coder_class =
-        emscripten::class_<coder_type>(name.c_str())
-        .template smart_ptr<std::shared_ptr<coder_type>>(name.c_str())
-        .function("write_payload", &coder_write_payload<coder_type>)
-        .function("symbols", &coder_symbols<coder_type>)
-        .function("symbol_size", &coder_symbol_size<coder_type>)
-        .function("rank", &coder_rank<coder_type>)
-        .function("block_size", &coder_block_size<coder_type>)
-        .function("payload_size", &coder_payload_size<coder_type>)
-        .function("is_symbol_pivot", &coder_is_symbol_pivot<coder_type>)
+        emscripten::class_<Coder>(name.c_str())
+        .template smart_ptr<std::shared_ptr<Coder>>(name.c_str())
+        .function("write_payload", &coder_write_payload<Coder>)
+        .function("symbols", &coder_symbols<Coder>)
+        .function("symbol_size", &coder_symbol_size<Coder>)
+        .function("rank", &coder_rank<Coder>)
+        .function("block_size", &coder_block_size<Coder>)
+        .function("payload_size", &coder_payload_size<Coder>)
         ;
 
     return coder_class;

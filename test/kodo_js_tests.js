@@ -25,69 +25,53 @@ function random_string(length) {
     return s
 }
 
-function create_factory_test(name, factory_type) {
+function create_factory_test(name, factory_type, field) {
     return context(name,
         setup(function() {
                 symbols = 8
                 symbol_size = 160
-                factory = new factory_type(symbols, symbol_size)
+                factory = new factory_type(field, symbols, symbol_size)
         }),
-        should("return the right number of symbols", function() {
-            assert.equal(symbols, factory.max_symbols())
+        should("return the correct number of symbols", function() {
             assert.equal(symbols, factory.symbols())
             symbols2 = 4
             factory.set_symbols(symbols2)
             assert.equal(symbols2, factory.symbols())
         }),
-        should("return the right symbol size", function() {
-            assert.equal(symbol_size, factory.max_symbol_size())
+        should("return the correct symbol size", function() {
             assert.equal(symbol_size, factory.symbol_size())
             symbol_size2 = 80
             factory.set_symbol_size(symbol_size2)
             assert.equal(symbol_size2, factory.symbol_size())
-        }),
-        should("return a payload size above 0", function() {
-            assert.isTrue(factory.max_payload_size() > 0)
-        }),
-        should("return the right block size", function() {
-            assert.equal(symbol_size * symbols, factory.max_block_size())
         }),
         should("create an object when calling build", function() {
             assert.equal("object", typeof factory.build())
         }))
 }
 
-function create_coder_test(name, factory_type) {
+function create_coder_test(name, factory_type, field) {
     return [
         name,
         setup(function() {
                 symbols = 8
                 symbol_size = 160
-                factory = new factory_type(symbols, symbol_size)
+                factory = new factory_type(field, symbols, symbol_size)
                 coder = factory.build()
         }),
-        should("return the right number of symbols", function() {
+        should("return the correct number of symbols", function() {
             assert.equal(factory.symbols(), coder.symbols())
         }),
 
-        should("return the right symbol size", function() {
+        should("return the correct symbol size", function() {
             assert.equal(symbol_size, coder.symbol_size())
         }),
-        should("return the right payload size", function() {
-            assert.equal(coder.payload_size(), factory.max_payload_size())
-        }),
-        should("return the right block size", function() {
+        should("return the correct block size", function() {
             assert.equal(symbol_size * symbols, coder.block_size())
-        }),
-        should("no pivot symbols before decoding/settings symbols", function() {
-            for (var i = 0; i < coder.symbols(); i++) {
-                assert.isFalse(coder.is_symbol_pivot(i))
-            };
         })]
 }
 
-function create_decoder_test() {
-    test = create_coder_test("decoder", kodo.decoder_factory)
+function create_decoder_test(field) {
+    test = create_coder_test("decoder", kodo.decoder_factory, field)
     test.push(
         should("should not be complete initially", function() {
             assert.isFalse(coder.is_complete())
@@ -117,8 +101,8 @@ function create_decoder_test() {
 //     coder.copy_symbols()
 // }),
 
-function create_encoder_test() {
-    test = create_coder_test("encoder", kodo.encoder_factory)
+function create_encoder_test(field) {
+    test = create_coder_test("encoder", kodo.encoder_factory, field)
     test.push(
         should("be systematic initially", function() {
             assert.isTrue(coder.is_systematic_on())
@@ -145,10 +129,10 @@ function create_encoder_test() {
 // }),
 
 context("kodo",
-    create_factory_test('encoder_factory', kodo.encoder_factory),
-    create_factory_test('decoder_factory', kodo.decoder_factory),
-    create_decoder_test(),
-    create_encoder_test(),
+    create_factory_test('encoder_factory', kodo.encoder_factory, kodo.field.binary),
+    create_factory_test('decoder_factory', kodo.decoder_factory, kodo.field.binary),
+    create_decoder_test(kodo.field.binary),
+    create_encoder_test(kodo.field.binary),
     should("work when putting it all to together", function() {
         // Set the number of symbols (i.e. the generation size in RLNC
         // terminology) and the size of a symbol in bytes
@@ -157,23 +141,23 @@ context("kodo",
 
         // In the following we will make an encoder/decoder factory.
         // The factories are used to build actual encoders/decoders
-        encoder_factory = new kodo.encoder_factory(symbols, symbol_size)
+        encoder_factory = new kodo.encoder_factory(kodo.field.binary, symbols, symbol_size)
         encoder = encoder_factory.build()
 
-        decoder_factory = new kodo.decoder_factory(symbols, symbol_size)
+        decoder_factory = new kodo.decoder_factory(kodo.field.binary, symbols, symbol_size)
         decoder = decoder_factory.build()
 
         // Test number symbols
         assert.equal(symbols, encoder.symbols())
-        assert.equal(symbols, encoder_factory.max_symbols())
+        assert.equal(symbols, encoder_factory.symbols())
         assert.equal(symbols, decoder.symbols())
-        assert.equal(symbols, decoder_factory.max_symbols())
+        assert.equal(symbols, decoder_factory.symbols())
 
         // Test symbol size
         assert.equal(symbol_size, encoder.symbol_size())
-        assert.equal(symbol_size, encoder_factory.max_symbol_size())
+        assert.equal(symbol_size, encoder_factory.symbol_size())
         assert.equal(symbol_size, decoder.symbol_size())
-        assert.equal(symbol_size, decoder_factory.max_symbol_size())
+        assert.equal(symbol_size, decoder_factory.symbol_size())
 
         // Create some data
         data_in = random_string(encoder.block_size())
