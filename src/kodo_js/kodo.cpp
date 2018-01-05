@@ -106,12 +106,12 @@ using decoder_factory = kodo_core::basic_factory<decoder>;
 EMSCRIPTEN_BINDINGS(kodo)
 {
     emscripten::enum_<fifi::api::field>("field")
-        .value("binary", fifi::api::field::binary)
-        .value("binary4", fifi::api::field::binary4)
-        .value("binary8", fifi::api::field::binary8)
-        .value("binary16", fifi::api::field::binary16)
-        .value("prime2325", fifi::api::field::prime2325)
-        ;
+    .value("binary", fifi::api::field::binary)
+    .value("binary4", fifi::api::field::binary4)
+    .value("binary8", fifi::api::field::binary8)
+    .value("binary16", fifi::api::field::binary16)
+    .value("prime2325", fifi::api::field::prime2325);
+
     {
         kodo_js::factory<encoder_factory>("encoder");
         kodo_js::encoder<encoder>("");
