@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Major: Upgrade to kodo-rlnc 9
 
 1.0.0
 -----

@@ -7,11 +7,6 @@
 
 #include <string>
 
-#include <kodo_core/is_systematic_on.hpp>
-#include <kodo_core/set_systematic_off.hpp>
-#include <kodo_core/set_systematic_on.hpp>
-#include <kodo_core/write_feedback.hpp>
-
 #include "coder.hpp"
 
 namespace kodo_js
@@ -36,31 +31,30 @@ void encoder_set_const_symbol(Encoder& encoder, uint32_t index,
 template<class Encoder>
 bool encoder_is_systematic_on(const Encoder& encoder)
 {
-    return kodo_core::is_systematic_on(encoder);
+    return encoder.is_systematic_on();
 }
 
 template<class Encoder>
 void encoder_set_systematic_on(Encoder& encoder)
 {
-    kodo_core::set_systematic_on(encoder);
+    encoder.set_systematic_on();
 }
 
 template<class Encoder>
 void encoder_set_systematic_off(Encoder& encoder)
 {
-    kodo_core::set_systematic_off(encoder);
+    encoder.set_systematic_off();
 }
 
-template<template<class, class, class...> class Coder, class Field>
+template<class Coder>
 void encoder(const std::string& name)
 {
-    using encoder_type = Coder<Field, meta::typelist<>>;
-    coder<Coder, Field>(std::string("encoder") + name)
-    .function("set_const_symbols", &encoder_set_const_symbols<encoder_type>)
-    .function("set_const_symbol", &encoder_set_const_symbol<encoder_type>)
-    .function("is_systematic_on", &encoder_is_systematic_on<encoder_type>)
-    .function("set_systematic_on", &encoder_set_systematic_on<encoder_type>)
-    .function("set_systematic_off", &encoder_set_systematic_off<encoder_type>)
+    coder<Coder>(std::string("encoder") + name)
+    .function("set_const_symbols", &encoder_set_const_symbols<Coder>)
+    .function("set_const_symbol", &encoder_set_const_symbol<Coder>)
+    .function("is_systematic_on", &encoder_is_systematic_on<Coder>)
+    .function("set_systematic_on", &encoder_set_systematic_on<Coder>)
+    .function("set_systematic_off", &encoder_set_systematic_off<Coder>)
     ;
 }
 }

@@ -58,3 +58,6 @@ local.properties
 *.txt
 *.vcxproj*
 VSProjects
+
+# Visual Studio Code
+.vscode
