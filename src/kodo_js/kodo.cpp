@@ -45,62 +45,62 @@
 
 namespace
 {
-    using encoder =
-        // Payload Codec API
-        kodo_core::payload_info<
-        // Block Coder API
-        kodo_core::block_encoder<
-        // Codec Header API
-        kodo_core::default_on_systematic_encoder<
-        kodo_core::symbol_id_encoder<
-        // Symbol ID API
-        kodo_core::plain_symbol_id_writer_layers<
-        // Coefficient Generator API
-        kodo_core::uniform_generator_layers<
-        // Codec API
-        kodo_core::common_encoder_layers<
-        // Coefficient Storage API
-        kodo_core::coefficient_value_access<
-        kodo_core::coefficient_info<
-        // Symbol Storage API
-        kodo_core::deep_storage_layers<
-        // Finite Field API
-        kodo_core::finite_field<
-        // Trace layer
-        kodo_core::trace_layer<
-        // Final Layer
-        kodo_core::final_layer
-        > > > > > > > > > > > >;
+using encoder =
+    // Payload Codec API
+    kodo_core::payload_info<
+    // Block Coder API
+    kodo_core::block_encoder<
+    // Codec Header API
+    kodo_core::default_on_systematic_encoder<
+    kodo_core::symbol_id_encoder<
+    // Symbol ID API
+    kodo_core::plain_symbol_id_writer_layers<
+    // Coefficient Generator API
+    kodo_core::uniform_generator_layers<
+    // Codec API
+    kodo_core::common_encoder_layers<
+    // Coefficient Storage API
+    kodo_core::coefficient_value_access<
+    kodo_core::coefficient_info<
+    // Symbol Storage API
+    kodo_core::deep_storage_layers<
+    // Finite Field API
+    kodo_core::finite_field<
+    // Trace layer
+    kodo_core::trace_layer<
+    // Final Layer
+    kodo_core::final_layer
+    >>>>>>>>>>>>;
+using encoder_factory = kodo_core::basic_factory<encoder>;
 
-    using encoder_factory = kodo_core::basic_factory<encoder>;
-    using decoder =
-        kodo_core::nested_write_payload<
-        kodo_core::nested_set_seed<
-        kodo_core::basic_proxy_stack<
-        kodo_core::proxy_args<>, kodo_rlnc::full_vector_recoding_stack,
-        kodo_core::payload_info<
-        // Block Coder API
-        kodo_core::block_decoder<
-        // Codec Header API
-        kodo_core::systematic_decoder_layers<
-        kodo_core::symbol_id_decoder<
-        // Symbol ID API
-        kodo_core::plain_symbol_id_reader_layers<
-        // Decoder API
-        kodo_core::symbol_decoding_status_updater<
-        kodo_core::common_decoder_layers<
-        // Coefficient Storage API
-        kodo_core::coefficient_storage_layers<
-        // Storage API
-        kodo_core::deep_storage_layers<
-        // Finite Field API
-        kodo_core::finite_field<
-        // Trace Layer
-        kodo_core::trace_layer<
-        // Final Layer
-        kodo_core::final_layer
-        >>>>>>>>>>>>>>;
-    using decoder_factory = kodo_core::basic_factory<decoder>;
+using decoder =
+    kodo_core::nested_write_payload<
+    kodo_core::nested_set_seed<
+    kodo_core::basic_proxy_stack<
+    kodo_core::proxy_args<>, kodo_rlnc::full_vector_recoding_stack,
+    kodo_core::payload_info<
+    // Block Coder API
+    kodo_core::block_decoder<
+    // Codec Header API
+    kodo_core::systematic_decoder_layers<
+    kodo_core::symbol_id_decoder<
+    // Symbol ID API
+    kodo_core::plain_symbol_id_reader_layers<
+    // Decoder API
+    kodo_core::symbol_decoding_status_updater<
+    kodo_core::common_decoder_layers<
+    // Coefficient Storage API
+    kodo_core::coefficient_storage_layers<
+    // Storage API
+    kodo_core::deep_storage_layers<
+    // Finite Field API
+    kodo_core::finite_field<
+    // Trace Layer
+    kodo_core::trace_layer<
+    // Final Layer
+    kodo_core::final_layer
+    >>>>>>>>>>>>>>;
+using decoder_factory = kodo_core::basic_factory<decoder>;
 }
 
 EMSCRIPTEN_BINDINGS(kodo)
