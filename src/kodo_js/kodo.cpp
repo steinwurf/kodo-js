@@ -10,34 +10,28 @@
 #include <kodo_core/block_decoder.hpp>
 #include <kodo_core/block_encoder.hpp>
 #include <kodo_core/coefficient_info.hpp>
-#include <kodo_core/coefficient_storage.hpp>
+#include <kodo_core/coefficient_offset.hpp>
 #include <kodo_core/coefficient_storage_layers.hpp>
-#include <kodo_core/coefficient_value_access.hpp>
+#include <kodo_core/common_decoder_layers.hpp>
 #include <kodo_core/common_encoder_layers.hpp>
 #include <kodo_core/deep_storage_layers.hpp>
-#include <kodo_core/default_on_systematic_encoder.hpp>
+#include <kodo_core/default_systematic_phase.hpp>
 #include <kodo_core/final_layer.hpp>
 #include <kodo_core/finite_field.hpp>
-#include <kodo_core/linear_block_encoder.hpp>
 #include <kodo_core/nested_set_seed.hpp>
 #include <kodo_core/nested_write_payload.hpp>
-#include <kodo_core/payload_info.hpp>
-#include <kodo_core/plain_symbol_id_reader.hpp>
-#include <kodo_core/plain_symbol_id_reader_layers.hpp>
-#include <kodo_core/plain_symbol_id_size.hpp>
-#include <kodo_core/plain_symbol_id_writer.hpp>
-#include <kodo_core/plain_symbol_id_writer_layers.hpp>
-#include <kodo_core/storage_aware_encoder.hpp>
+#include <kodo_core/partial_decoding_tracker.hpp>
+#include <kodo_core/rank_symbol_decoding_status_updater.hpp>
+#include <kodo_core/storage_aware_systematic_phase.hpp>
 #include <kodo_core/symbol_decoding_status_updater.hpp>
-#include <kodo_core/symbol_id_decoder.hpp>
-#include <kodo_core/symbol_id_encoder.hpp>
-#include <kodo_core/systematic_decoder_layers.hpp>
 #include <kodo_core/trace_layer.hpp>
-#include <kodo_core/uniform_generator_layers.hpp>
-#include <kodo_core/write_symbol_tracker.hpp>
-#include <kodo_core/zero_symbol_encoder.hpp>
-#include <kodo_rlnc/full_vector_recoding_stack.hpp>
-#include <kodo_core/common_decoder_layers.hpp>
+
+#include <kodo_rlnc/detail/coding_vector_selector.hpp>
+#include <kodo_rlnc/detail/payload_reader.hpp>
+#include <kodo_rlnc/detail/payload_writer.hpp>
+#include <kodo_rlnc/detail/recoding_stack.hpp>
+#include <kodo_rlnc/detail/seed_generator.hpp>
+#include <kodo_rlnc/detail/uniform_generator.hpp>
 
 #include "decoder.hpp"
 #include "encoder.hpp"
@@ -46,21 +40,20 @@
 namespace
 {
 using encoder =
-    // Payload Codec API
-    kodo_core::payload_info<
-    // Block Coder API
+    // Payload API
     kodo_core::block_encoder<
-    // Codec Header API
-    kodo_core::default_on_systematic_encoder<
-    kodo_core::symbol_id_encoder<
+    kodo_rlnc::detail::payload_writer<
+    kodo_core::default_systematic_phase<true,
+    kodo_core::storage_aware_systematic_phase<
     // Symbol ID API
-    kodo_core::plain_symbol_id_writer_layers<
+    kodo_rlnc::detail::coding_vector_selector<
     // Coefficient Generator API
-    kodo_core::uniform_generator_layers<
-    // Codec API
+    kodo_rlnc::detail::seed_generator<
+    kodo_rlnc::detail::uniform_generator<
+    // Encoder API
     kodo_core::common_encoder_layers<
     // Coefficient Storage API
-    kodo_core::coefficient_value_access<
+    kodo_core::coefficient_offset<
     kodo_core::coefficient_info<
     // Symbol Storage API
     kodo_core::deep_storage_layers<
@@ -70,22 +63,22 @@ using encoder =
     kodo_core::trace_layer<
     // Final Layer
     kodo_core::final_layer
-    >>>>>>>>>>>>;
+    >>>>>>>>>>>>>;
 using encoder_factory = kodo_core::basic_factory<encoder>;
 
 using decoder =
+    // Payload API
     kodo_core::nested_write_payload<
     kodo_core::nested_set_seed<
     kodo_core::basic_proxy_stack<
-    kodo_core::proxy_args<>, kodo_rlnc::full_vector_recoding_stack,
-    kodo_core::payload_info<
-    // Block Coder API
+    kodo_core::proxy_args<>, kodo_rlnc::detail::recoding_stack,
+    kodo_core::partial_decoding_tracker<
+    kodo_core::rank_symbol_decoding_status_updater<
     kodo_core::block_decoder<
-    // Codec Header API
-    kodo_core::systematic_decoder_layers<
-    kodo_core::symbol_id_decoder<
-    // Symbol ID API
-    kodo_core::plain_symbol_id_reader_layers<
+    kodo_rlnc::detail::payload_reader<
+    kodo_rlnc::detail::coding_vector_selector<
+    // Coefficient Generator API
+    kodo_rlnc::detail::uniform_generator<
     // Decoder API
     kodo_core::symbol_decoding_status_updater<
     kodo_core::common_decoder_layers<
@@ -99,7 +92,7 @@ using decoder =
     kodo_core::trace_layer<
     // Final Layer
     kodo_core::final_layer
-    >>>>>>>>>>>>>>;
+    >>>>>>>>>>>>>>>;
 using decoder_factory = kodo_core::basic_factory<decoder>;
 }
 

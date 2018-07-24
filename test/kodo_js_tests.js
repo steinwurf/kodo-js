@@ -4,12 +4,9 @@
 // http://www.steinwurf.com/licensing
 
 // Load unit testing framework
-var fs = require('fs')
-var path = require('path')
-filedata = fs.readFileSync(path.join(__dirname, 'shoulda.js'),'utf8')
-eval(filedata)
+module.require('./shoulda.js')
 
-kodo = module.require('kodo.js')
+var kodo = module.require('kodo.js')
 
 function random_string(length) {
     var s = ""
