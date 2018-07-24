@@ -15,7 +15,14 @@ def configure(conf):
 
 def build(bld):
 
-    bld.recurse('src/kodo_js')
+    # Build the kodo.js library
+    bld.program(
+        features='cxx',
+        source=bld.path.ant_glob('src/kodo_js/**/*.cpp'),
+        target='kodo',
+        linkflags=['--bind'],
+        use=['kodo_rlnc'],
+        export_includes=['..'])
 
     if bld.is_toplevel():
         if bld.has_tool_option('run_tests'):
@@ -25,7 +32,7 @@ def build(bld):
 def exec_test_js(bld):
     nodejs = bld.env['NODEJS'][0]
     env = dict(os.environ)
-    env['NODE_PATH'] = os.path.join(bld.out_dir, 'src', 'kodo_js')
+    env['NODE_PATH'] = os.path.join(bld.out_dir)
 
     # First, run the unit tests in the 'test' folder
     if os.path.exists('test'):

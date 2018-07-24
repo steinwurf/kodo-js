@@ -42,8 +42,7 @@ function encode_decode_simple() {
     encoder.set_const_symbols(data_in)
 
     var packet_number = 0
-    while (!decoder.is_complete())
-    {
+    while (!decoder.is_complete()) {
         packet = encoder.write_payload()
         console.log("Packet %d encoded!", packet_number)
         decoder.read_payload(packet)
