@@ -49,7 +49,7 @@ void encoder_set_systematic_off(Encoder& encoder)
 template<class Coder>
 void encoder(const std::string& name)
 {
-    coder<Coder>(std::string("encoder") + name)
+    coder<Coder>(name)
     .function("set_const_symbols", &encoder_set_const_symbols<Coder>)
     .function("set_const_symbol", &encoder_set_const_symbol<Coder>)
     .function("is_systematic_on", &encoder_is_systematic_on<Coder>)

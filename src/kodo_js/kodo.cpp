@@ -106,10 +106,10 @@ EMSCRIPTEN_BINDINGS(kodo)
     .value("prime2325", fifi::api::field::prime2325);
 
     {
-        kodo_js::factory<encoder_factory>("encoder");
-        kodo_js::encoder<encoder>("");
+        kodo_js::factory<encoder_factory>("encoder_factory");
+        kodo_js::encoder<encoder>("encoder");
 
-        kodo_js::factory<decoder_factory>("decoder");
-        kodo_js::decoder<decoder>("");
+        kodo_js::factory<decoder_factory>("decoder_factory");
+        kodo_js::decoder<decoder>("decoder");
     }
 }

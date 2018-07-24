@@ -55,7 +55,7 @@ uint32_t decoder_symbols_partially_decoded(Decoder& decoder)
 template<class Coder>
 void decoder(const std::string& name)
 {
-    coder<Coder>(std::string("decoder") + name)
+    coder<Coder>(name)
     .function("is_complete", &decoder_is_complete<Coder>)
     .function("symbols_uncoded", &decoder_symbols_uncoded<Coder>)
     .function("copy_from_symbols", &decoder_copy_from_symbols<Coder>)

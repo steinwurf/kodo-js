@@ -47,8 +47,13 @@ void factory(const std::string& name)
 {
     using namespace emscripten;
 
-    class_<Factory>((name + "_factory").c_str())
-    .constructor<fifi::api::field, uint32_t, uint32_t>()
+    // A shared_ptr is returned when calling "new kodo.xyz_factory()"
+    // therefore the factory will be destroyed when its Javascript handle
+    // goes out of scope
+    class_<Factory>(name.c_str())
+    .template smart_ptr_constructor<
+        std::shared_ptr<Factory>, fifi::api::field&&, uint32_t&&, uint32_t&&>
+    (name.c_str(), &std::make_shared<Factory>)
     .function("set_symbols", &factory_set_symbols<Factory>)
     .function("symbols", &factory_symbols<Factory>)
     .function("set_symbol_size", &factory_set_symbol_size<Factory>)
