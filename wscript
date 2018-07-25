@@ -49,4 +49,5 @@ def exec_test_js(bld):
             if f.endswith('.js'):
                 example = os.path.join('examples', f)
                 bld.cmd_and_log(
-                    '{0} {1} --dry-run\n'.format(nodejs, example), env=env)
+                    '{0} {1}\n'.format(nodejs, example), env=env)
+                print('-------------------------------\n')
