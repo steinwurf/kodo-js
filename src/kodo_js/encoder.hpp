@@ -7,6 +7,8 @@
 
 #include <string>
 
+#include <storage/storage.hpp>
+
 #include "coder.hpp"
 
 namespace kodo_js
@@ -14,18 +16,28 @@ namespace kodo_js
 template<class Encoder>
 void encoder_set_const_symbols(Encoder& encoder, const std::string& data)
 {
-    auto storage =
+    auto source =
         storage::const_storage((uint8_t*)data.c_str(), data.length());
-    encoder.set_const_symbols(storage);
+
+    // Copy the temporary string data to the permanent storage
+    storage::copy(storage::storage(encoder.m_symbol_storage), source);
 }
 
 template<class Encoder>
 void encoder_set_const_symbol(Encoder& encoder, uint32_t index,
                               const std::string& data)
 {
-    auto storage =
+    auto source =
         storage::const_storage((uint8_t*)data.c_str(), data.length());
-    encoder.set_const_symbol(index, storage);
+
+    uint32_t size = encoder.symbol_size();
+    uint32_t offset = index * size;
+
+    auto symbol =
+        storage::storage(encoder.m_symbol_storage.data() + offset, size);
+
+    // Copy the temporary string data to the permanent storage
+    storage::copy(symbol, source);
 }
 
 template<class Encoder>

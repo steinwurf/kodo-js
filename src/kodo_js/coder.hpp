@@ -7,6 +7,10 @@
 
 #include <emscripten/bind.h>
 
+#include <cstdint>
+#include <string>
+#include <vector>
+
 namespace kodo_js
 {
 template<class Coder>

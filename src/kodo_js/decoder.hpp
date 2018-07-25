@@ -19,7 +19,7 @@ bool decoder_is_complete(Decoder& decoder)
 }
 
 template<class Decoder>
-void decoder_read_payload(Decoder& decoder, const std::string payload)
+void decoder_read_payload(Decoder& decoder, const std::string& payload)
 {
     decoder.read_payload((uint8_t*) payload.c_str());
 }
@@ -27,11 +27,8 @@ void decoder_read_payload(Decoder& decoder, const std::string payload)
 template<class Decoder>
 std::string decoder_copy_from_symbols(Decoder& decoder)
 {
-    std::vector<uint8_t> payload(decoder.block_size());
-    auto storage = storage::mutable_storage(
-        payload.data(), decoder.block_size());
-    decoder.copy_from_symbols(storage);
-    return std::string(payload.begin(), payload.end());
+    return std::string(decoder.m_symbol_storage.begin(),
+                       decoder.m_symbol_storage.end());
 }
 
 template<class Decoder>
