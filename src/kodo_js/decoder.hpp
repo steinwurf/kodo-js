@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <emscripten/bind.h>
+
 #include <string>
 #include <vector>
 
@@ -19,9 +21,9 @@ bool decoder_is_complete(Decoder& decoder)
 }
 
 template<class Decoder>
-void decoder_read_payload(Decoder& decoder, const std::string& payload)
+void decoder_read_payload(Decoder& decoder, const emscripten::val& payload)
 {
-    decoder.read_payload((uint8_t*) payload.c_str());
+    //decoder.read_payload((uint8_t*) payload.c_str());
 }
 
 template<class Decoder>

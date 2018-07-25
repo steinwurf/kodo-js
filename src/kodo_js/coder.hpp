@@ -14,11 +14,20 @@
 namespace kodo_js
 {
 template<class Coder>
-std::string coder_write_payload(Coder& coder)
+emscripten::val coder_write_payload(Coder& coder)
 {
+    using namespace emscripten;
+
     std::vector<uint8_t> payload(coder.payload_size());
-    coder.write_payload(payload.data());
-    return std::string(payload.begin(), payload.end());
+    uint32_t length = coder.write_payload(payload.data());
+
+    val user_array = val::global("Uint8Array").new_(length);
+    val heap = val::module_property("buffer");
+    val payload_view = val::global("Uint8Array").new_(
+        heap, reinterpret_cast<uintptr_t>(payload.data()), length);
+    user_array.call<void>("set", payload_view);
+
+    return user_array;
 }
 
 template<class Coder>
@@ -60,10 +69,13 @@ uint32_t coder_feedback_size(Coder& coder)
 template<class Coder>
 auto coder(const std::string& name) -> emscripten::class_<Coder>
 {
+    using namespace emscripten;
+
     auto coder_class =
-        emscripten::class_<Coder>(name.c_str())
+        class_<Coder>(name.c_str())
         .template smart_ptr<std::shared_ptr<Coder>>(name.c_str())
-        .function("write_payload", &coder_write_payload<Coder>)
+        .function("write_payload",
+                 &coder_write_payload<Coder>, allow_raw_pointers())
         .function("symbols", &coder_symbols<Coder>)
         .function("symbol_size", &coder_symbol_size<Coder>)
         .function("rank", &coder_rank<Coder>)

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <emscripten/bind.h>
+
 #include <string>
 
 #include <storage/storage.hpp>

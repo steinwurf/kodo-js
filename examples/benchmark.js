@@ -67,6 +67,7 @@ function run_coding_test(field, symbols, symbol_size) {
     var encoded_bytes = payload_count * symbol_size
     var encoding_rate = encoded_bytes / encoding_time
 
+    console.log(payloads[0].constructor.name)
     var start_decoding = clock()
 
     for (var i = 0; i < payload_count; i++) {
