@@ -75,7 +75,7 @@ auto coder(const std::string& name) -> emscripten::class_<Coder>
         class_<Coder>(name.c_str())
         .template smart_ptr<std::shared_ptr<Coder>>(name.c_str())
         .function("write_payload",
-                 &coder_write_payload<Coder>, allow_raw_pointers())
+                  &coder_write_payload<Coder>, allow_raw_pointers())
         .function("symbols", &coder_symbols<Coder>)
         .function("symbol_size", &coder_symbol_size<Coder>)
         .function("rank", &coder_rank<Coder>)

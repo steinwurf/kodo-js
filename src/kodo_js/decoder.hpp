@@ -21,9 +21,18 @@ bool decoder_is_complete(Decoder& decoder)
 }
 
 template<class Decoder>
-void decoder_read_payload(Decoder& decoder, const emscripten::val& payload)
+void decoder_read_payload(Decoder& decoder, const emscripten::val& arr)
 {
-    //decoder.read_payload((uint8_t*) payload.c_str());
+    using namespace emscripten;
+
+    unsigned int length = arr["length"].as<unsigned int>();
+    std::vector<uint8_t> payload(length);
+    val memory = val::module_property("buffer");
+    val memoryView = val::global("Float64Array").new_(
+        memory, reinterpret_cast<std::uintptr_t>(payload.data()), length);
+    memoryView.call<void>("set", arr);
+
+    decoder.read_payload(payload.data());
 }
 
 template<class Decoder>
