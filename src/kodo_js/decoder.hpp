@@ -28,8 +28,8 @@ void decoder_read_payload(Decoder& decoder, const emscripten::val& arr)
     unsigned int length = arr["length"].as<unsigned int>();
     std::vector<uint8_t> payload(length);
     val memory = val::module_property("buffer");
-    val memoryView = val::global("Float64Array").new_(
-        memory, reinterpret_cast<std::uintptr_t>(payload.data()), length);
+    val memoryView = val::global("Uint8Array").new_(
+        memory, reinterpret_cast<uintptr_t>(payload.data()), length);
     memoryView.call<void>("set", arr);
 
     decoder.read_payload(payload.data());
