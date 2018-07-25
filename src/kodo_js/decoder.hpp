@@ -19,9 +19,9 @@ bool decoder_is_complete(Decoder& decoder)
 }
 
 template<class Decoder>
-uint32_t decoder_symbols_uncoded(Decoder& decoder)
+void decoder_read_payload(Decoder& decoder, const std::string payload)
 {
-    return decoder.symbols_uncoded();
+    decoder.read_payload((uint8_t*) payload.c_str());
 }
 
 template<class Decoder>
@@ -35,15 +35,15 @@ std::string decoder_copy_from_symbols(Decoder& decoder)
 }
 
 template<class Decoder>
-bool decoder_is_symbol_uncoded(Decoder& decoder, uint32_t index)
+uint32_t decoder_symbols_missing(Decoder& decoder)
 {
-    return decoder.is_symbol_uncoded(index);
+    return decoder.symbols_missing();
 }
 
 template<class Decoder>
-void decoder_read_payload(Decoder& decoder, const std::string payload)
+uint32_t decoder_symbols_uncoded(Decoder& decoder)
 {
-    decoder.read_payload((uint8_t*) payload.c_str());
+    return decoder.symbols_uncoded();
 }
 
 template<class Decoder>
@@ -52,17 +52,39 @@ uint32_t decoder_symbols_partially_decoded(Decoder& decoder)
     return decoder.symbols_partially_decoded();
 }
 
+template<class Decoder>
+bool decoder_is_symbol_missing(Decoder& decoder, uint32_t index)
+{
+    return decoder.is_symbol_missing(index);
+}
+
+template<class Decoder>
+bool decoder_is_symbol_uncoded(Decoder& decoder, uint32_t index)
+{
+    return decoder.is_symbol_uncoded(index);
+}
+
+template<class Decoder>
+bool decoder_is_symbol_partially_decoded(Decoder& decoder, uint32_t index)
+{
+    return decoder.is_symbol_partially_decoded(index);
+}
+
 template<class Coder>
 void decoder(const std::string& name)
 {
     coder<Coder>(name)
     .function("is_complete", &decoder_is_complete<Coder>)
-    .function("symbols_uncoded", &decoder_symbols_uncoded<Coder>)
-    .function("copy_from_symbols", &decoder_copy_from_symbols<Coder>)
-    .function("is_symbol_uncoded", &decoder_is_symbol_uncoded<Coder>)
     .function("read_payload", &decoder_read_payload<Coder>)
+    .function("copy_from_symbols", &decoder_copy_from_symbols<Coder>)
+    .function("symbols_missing", &decoder_symbols_missing<Coder>)
+    .function("symbols_uncoded", &decoder_symbols_uncoded<Coder>)
     .function("symbols_partially_decoded",
               &decoder_symbols_partially_decoded<Coder>)
+    .function("is_symbol_missing", &decoder_is_symbol_missing<Coder>)
+    .function("is_symbol_uncoded", &decoder_is_symbol_uncoded<Coder>)
+    .function("is_symbol_partially_decoded",
+              &decoder_is_symbol_partially_decoded<Coder>)
     ;
 }
 }
