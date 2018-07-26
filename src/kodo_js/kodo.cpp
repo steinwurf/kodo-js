@@ -5,39 +5,13 @@
 
 #include <emscripten/bind.h>
 
+#include <cstdint>
+#include <vector>
+
+#include <storage/storage.hpp>
+
 #include <kodo_core/basic_factory.hpp>
-#include <kodo_core/basic_proxy_stack.hpp>
-#include <kodo_core/block_decoder.hpp>
-#include <kodo_core/block_encoder.hpp>
-#include <kodo_core/coefficient_info.hpp>
-#include <kodo_core/coefficient_storage.hpp>
-#include <kodo_core/coefficient_storage_layers.hpp>
-#include <kodo_core/coefficient_value_access.hpp>
-#include <kodo_core/common_encoder_layers.hpp>
-#include <kodo_core/deep_storage_layers.hpp>
-#include <kodo_core/default_on_systematic_encoder.hpp>
-#include <kodo_core/final_layer.hpp>
-#include <kodo_core/finite_field.hpp>
-#include <kodo_core/linear_block_encoder.hpp>
-#include <kodo_core/nested_set_seed.hpp>
-#include <kodo_core/nested_write_payload.hpp>
-#include <kodo_core/payload_info.hpp>
-#include <kodo_core/plain_symbol_id_reader.hpp>
-#include <kodo_core/plain_symbol_id_reader_layers.hpp>
-#include <kodo_core/plain_symbol_id_size.hpp>
-#include <kodo_core/plain_symbol_id_writer.hpp>
-#include <kodo_core/plain_symbol_id_writer_layers.hpp>
-#include <kodo_core/storage_aware_encoder.hpp>
-#include <kodo_core/symbol_decoding_status_updater.hpp>
-#include <kodo_core/symbol_id_decoder.hpp>
-#include <kodo_core/symbol_id_encoder.hpp>
-#include <kodo_core/systematic_decoder_layers.hpp>
-#include <kodo_core/trace_layer.hpp>
-#include <kodo_core/uniform_generator_layers.hpp>
-#include <kodo_core/write_symbol_tracker.hpp>
-#include <kodo_core/zero_symbol_encoder.hpp>
-#include <kodo_rlnc/full_vector_recoding_stack.hpp>
-#include <kodo_core/common_decoder_layers.hpp>
+#include <kodo_rlnc/coders.hpp>
 
 #include "decoder.hpp"
 #include "encoder.hpp"
@@ -45,62 +19,77 @@
 
 namespace
 {
-using encoder =
-    // Payload Codec API
-    kodo_core::payload_info<
-    // Block Coder API
-    kodo_core::block_encoder<
-    // Codec Header API
-    kodo_core::default_on_systematic_encoder<
-    kodo_core::symbol_id_encoder<
-    // Symbol ID API
-    kodo_core::plain_symbol_id_writer_layers<
-    // Coefficient Generator API
-    kodo_core::uniform_generator_layers<
-    // Codec API
-    kodo_core::common_encoder_layers<
-    // Coefficient Storage API
-    kodo_core::coefficient_value_access<
-    kodo_core::coefficient_info<
-    // Symbol Storage API
-    kodo_core::deep_storage_layers<
-    // Finite Field API
-    kodo_core::finite_field<
-    // Trace layer
-    kodo_core::trace_layer<
-    // Final Layer
-    kodo_core::final_layer
-    >>>>>>>>>>>>;
-using encoder_factory = kodo_core::basic_factory<encoder>;
+// Shallow storage is not a viable option for Embind, because we cannot map
+// a user-defined data buffer to the Emscripten heap, so we need to allocate
+// internal storage during initialize (this replicates deep storage)
+class encoder : public kodo_rlnc::encoder
+{
+public:
 
-using decoder =
-    kodo_core::nested_write_payload<
-    kodo_core::nested_set_seed<
-    kodo_core::basic_proxy_stack<
-    kodo_core::proxy_args<>, kodo_rlnc::full_vector_recoding_stack,
-    kodo_core::payload_info<
-    // Block Coder API
-    kodo_core::block_decoder<
-    // Codec Header API
-    kodo_core::systematic_decoder_layers<
-    kodo_core::symbol_id_decoder<
-    // Symbol ID API
-    kodo_core::plain_symbol_id_reader_layers<
-    // Decoder API
-    kodo_core::symbol_decoding_status_updater<
-    kodo_core::common_decoder_layers<
-    // Coefficient Storage API
-    kodo_core::coefficient_storage_layers<
-    // Storage API
-    kodo_core::deep_storage_layers<
-    // Finite Field API
-    kodo_core::finite_field<
-    // Trace Layer
-    kodo_core::trace_layer<
-    // Final Layer
-    kodo_core::final_layer
-    >>>>>>>>>>>>>>;
-using decoder_factory = kodo_core::basic_factory<decoder>;
+    using SuperCoder = kodo_rlnc::encoder;
+
+    using config = SuperCoder::factory;
+    using factory = kodo_core::basic_factory<encoder>;
+
+public:
+
+    template<class Factory>
+    void initialize(Factory& the_factory)
+    {
+        SuperCoder::initialize(the_factory);
+
+        m_symbol_storage.resize(SuperCoder::block_size());
+        SuperCoder::set_const_symbols(storage::storage(m_symbol_storage));
+    }
+
+    void set_const_symbols(const storage::const_storage& source)
+    {
+        storage::copy(storage::storage(m_symbol_storage), source);
+    }
+
+    void set_const_symbol(uint32_t index, const storage::const_storage& source)
+    {
+        assert(index < SuperCoder::symbols());
+
+        storage::mutable_storage dest_data = storage::storage(m_symbol_storage);
+        uint32_t offset = index * SuperCoder::symbol_size();
+        dest_data = storage::offset(dest_data, offset);
+
+        storage::copy(dest_data, source);
+    }
+
+protected:
+
+    // Data buffer that will be allocated on the Emscripten heap
+    std::vector<uint8_t> m_symbol_storage;
+};
+
+class decoder : public kodo_rlnc::decoder
+{
+public:
+
+    using SuperCoder = kodo_rlnc::decoder;
+
+    using config = SuperCoder::factory;
+    using factory = kodo_core::basic_factory<decoder>;
+
+public:
+
+    template<class Factory>
+    void initialize(Factory& the_factory)
+    {
+        SuperCoder::initialize(the_factory);
+
+        m_symbol_storage.resize(SuperCoder::block_size());
+        SuperCoder::set_mutable_symbols(storage::storage(m_symbol_storage));
+    }
+
+protected:
+
+    // Data buffer that will be allocated on the Emscripten heap
+    std::vector<uint8_t> m_symbol_storage;
+};
+
 }
 
 EMSCRIPTEN_BINDINGS(kodo)
@@ -109,14 +98,13 @@ EMSCRIPTEN_BINDINGS(kodo)
     .value("binary", fifi::api::field::binary)
     .value("binary4", fifi::api::field::binary4)
     .value("binary8", fifi::api::field::binary8)
-    .value("binary16", fifi::api::field::binary16)
-    .value("prime2325", fifi::api::field::prime2325);
+    .value("binary16", fifi::api::field::binary16);
 
     {
-        kodo_js::factory<encoder_factory>("encoder");
-        kodo_js::encoder<encoder>("");
+        kodo_js::factory<encoder::factory>("encoder_factory");
+        kodo_js::encoder<encoder>("encoder");
 
-        kodo_js::factory<decoder_factory>("decoder");
-        kodo_js::decoder<decoder>("");
+        kodo_js::factory<decoder::factory>("decoder_factory");
+        kodo_js::decoder<decoder>("decoder");
     }
 }

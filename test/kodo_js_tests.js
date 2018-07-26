@@ -4,12 +4,9 @@
 // http://www.steinwurf.com/licensing
 
 // Load unit testing framework
-var fs = require('fs')
-var path = require('path')
-filedata = fs.readFileSync(path.join(__dirname, 'shoulda.js'),'utf8')
-eval(filedata)
+module.require('./shoulda.js')
 
-kodo = module.require('kodo.js')
+var kodo = module.require('kodo.js')
 
 function random_string(length) {
     var s = ""
@@ -88,19 +85,6 @@ function create_decoder_test(field) {
     return context.apply(null, test)
 }
 
-// should("recode", function() {
-//     coder.recode()
-// }),
-// should("decode", function() {
-//     coder.decode()
-// }),
-// should("decode_symbol", function() {
-//     coder.decode_symbol()
-// }),
-// should("copy_symbols", function() {
-//     coder.copy_symbols()
-// }),
-
 function create_encoder_test(field) {
     test = create_coder_test("encoder", kodo.encoder_factory, field)
     test.push(
@@ -118,33 +102,21 @@ function create_encoder_test(field) {
     return context.apply(null, test)
 }
 
-// should("encode", function() {
-//     coder.encode()
-// }),
-// should("set_const_symbols", function() {
-//     coder.set_const_symbols()
-// }),
-// should("set_const_symbol", function() {
-//     coder.set_const_symbol()
-// }),
-
 context("kodo",
     create_factory_test('encoder_factory', kodo.encoder_factory, kodo.field.binary),
     create_factory_test('decoder_factory', kodo.decoder_factory, kodo.field.binary),
     create_decoder_test(kodo.field.binary),
     create_encoder_test(kodo.field.binary),
-    should("work when putting it all to together", function() {
-        // Set the number of symbols (i.e. the generation size in RLNC
-        // terminology) and the size of a symbol in bytes
+    should("encode-decode integration test", function() {
+
+        field = kodo.field.binary
         symbols = 8
         symbol_size = 160
 
-        // In the following we will make an encoder/decoder factory.
-        // The factories are used to build actual encoders/decoders
-        encoder_factory = new kodo.encoder_factory(kodo.field.binary, symbols, symbol_size)
+        encoder_factory = new kodo.encoder_factory(field, symbols, symbol_size)
         encoder = encoder_factory.build()
 
-        decoder_factory = new kodo.decoder_factory(kodo.field.binary, symbols, symbol_size)
+        decoder_factory = new kodo.decoder_factory(field, symbols, symbol_size)
         decoder = decoder_factory.build()
 
         // Test number symbols
@@ -159,23 +131,21 @@ context("kodo",
         assert.equal(symbol_size, decoder.symbol_size())
         assert.equal(symbol_size, decoder_factory.symbol_size())
 
-        // Create some data
+        // Create random input data
         data_in = random_string(encoder.block_size())
-
-        // Assign the data buffer to the encoder so that we can
-        // produce encoded symbols
         encoder.set_const_symbols(data_in)
 
-        number_of_packets = 0
-        while(!decoder.is_complete())
-        {
-            packet = encoder.write_payload()
-            number_of_packets += 1
-            decoder.read_payload(packet)
+        // Disable systematic coding to test with coded symbols only
+        encoder.set_systematic_off()
 
-            // Make sure we don't get an infinite loop.
-            assert.isTrue(number_of_packets <= symbols)
+        number_of_packets = 0
+        while (!decoder.is_complete()) {
+            packet = encoder.write_payload()
+            decoder.read_payload(packet)
+            number_of_packets += 1
         }
+        assert.isTrue(number_of_packets >= symbols)
+
         data_out = decoder.copy_from_symbols()
         assert.arrayEqual(data_in, data_out)
     })

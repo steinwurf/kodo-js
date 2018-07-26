@@ -7,6 +7,8 @@
 
 #include <string>
 
+#include <storage/storage.hpp>
+
 #include "coder.hpp"
 
 namespace kodo_js
@@ -14,18 +16,22 @@ namespace kodo_js
 template<class Encoder>
 void encoder_set_const_symbols(Encoder& encoder, const std::string& data)
 {
-    auto storage =
+    auto source =
         storage::const_storage((uint8_t*)data.c_str(), data.length());
-    encoder.set_const_symbols(storage);
+
+    // Copy the temporary string data to the permanent storage
+    encoder.set_const_symbols(source);
 }
 
 template<class Encoder>
 void encoder_set_const_symbol(Encoder& encoder, uint32_t index,
                               const std::string& data)
 {
-    auto storage =
+    auto source =
         storage::const_storage((uint8_t*)data.c_str(), data.length());
-    encoder.set_const_symbol(index, storage);
+
+    // Copy the temporary string data to the permanent storage
+    encoder.set_const_symbol(index, source);
 }
 
 template<class Encoder>
@@ -49,7 +55,7 @@ void encoder_set_systematic_off(Encoder& encoder)
 template<class Coder>
 void encoder(const std::string& name)
 {
-    coder<Coder>(std::string("encoder") + name)
+    coder<Coder>(name)
     .function("set_const_symbols", &encoder_set_const_symbols<Coder>)
     .function("set_const_symbol", &encoder_set_const_symbol<Coder>)
     .function("is_systematic_on", &encoder_is_systematic_on<Coder>)
