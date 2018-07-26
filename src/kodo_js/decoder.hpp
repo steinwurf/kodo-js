@@ -23,13 +23,24 @@ bool decoder_is_complete(Decoder& decoder)
 template<class Decoder>
 void decoder_read_payload(Decoder& decoder, const emscripten::val& arr)
 {
+    // Embind does not provide an efficient solution to pass a TypedArray
+    // to C++ without copying, but this can change in future versions:
+    // https://github.com/kripken/emscripten/issues/5519
+    // The implementation below is inspired by this blog post:
+    // https://sean.voisen.org/blog/2018/03/rendering-images-emscripten-wasm/
+
     using namespace emscripten;
 
+    // Fetc the length of the input Uint8Array that is not allocated on the
+    // Emscripten heap
     unsigned int length = arr["length"].as<unsigned int>();
+    // Creating a vector will allocate space on the Emscripten heap
     std::vector<uint8_t> payload(length);
     val memory = val::module_property("buffer");
+    // Create a new typed array that is a "view" onto the vector's memory
     val memoryView = val::global("Uint8Array").new_(
         memory, reinterpret_cast<uintptr_t>(payload.data()), length);
+    // Copy the input Uint8Array onto the Emscripten heap using "set"
     memoryView.call<void>("set", arr);
 
     decoder.read_payload(payload.data());
