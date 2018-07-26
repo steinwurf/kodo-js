@@ -21,14 +21,15 @@ bool decoder_is_complete(Decoder& decoder)
 template<class Decoder>
 void decoder_read_payload(Decoder& decoder, const std::string& payload)
 {
-    decoder.read_payload((uint8_t*) payload.c_str());
+    decoder.read_payload((uint8_t*)payload.c_str());
 }
 
 template<class Decoder>
 std::string decoder_copy_from_symbols(Decoder& decoder)
 {
-    return std::string(decoder.m_symbol_storage.begin(),
-                       decoder.m_symbol_storage.end());
+    // Copy the full symbol storage to the returned string
+    return std::string((const char*)decoder.mutable_symbol(0),
+                       decoder.block_size());
 }
 
 template<class Decoder>

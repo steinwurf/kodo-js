@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <vector>
 
+#include <storage/storage.hpp>
+
 #include <kodo_core/basic_factory.hpp>
 #include <kodo_rlnc/coders.hpp>
 
@@ -17,12 +19,19 @@
 
 namespace
 {
-struct encoder : public kodo_rlnc::encoder
+// Shallow storage is not a viable option for Embind, because we cannot map
+// a user-defined data buffer to the Emscripten heap, so we need to allocate
+// internal storage during initialize (this replicates deep storage)
+class encoder : public kodo_rlnc::encoder
 {
+public:
+
     using SuperCoder = kodo_rlnc::encoder;
 
     using config = SuperCoder::factory;
     using factory = kodo_core::basic_factory<encoder>;
+
+public:
 
     template<class Factory>
     void initialize(Factory& the_factory)
@@ -33,16 +42,38 @@ struct encoder : public kodo_rlnc::encoder
         SuperCoder::set_const_symbols(storage::storage(m_symbol_storage));
     }
 
+    void set_const_symbols(const storage::const_storage& source)
+    {
+        storage::copy(storage::storage(m_symbol_storage), source);
+    }
+
+    void set_const_symbol(uint32_t index, const storage::const_storage& source)
+    {
+        assert(index < SuperCoder::symbols());
+
+        storage::mutable_storage dest_data = storage::storage(m_symbol_storage);
+        uint32_t offset = index * SuperCoder::symbol_size();
+        dest_data = storage::offset(dest_data, offset);
+
+        storage::copy(dest_data, source);
+    }
+
+protected:
+
     // Data buffer that will be allocated on the Emscripten heap
     std::vector<uint8_t> m_symbol_storage;
 };
 
-struct decoder : public kodo_rlnc::decoder
+class decoder : public kodo_rlnc::decoder
 {
+public:
+
     using SuperCoder = kodo_rlnc::decoder;
 
     using config = SuperCoder::factory;
     using factory = kodo_core::basic_factory<decoder>;
+
+public:
 
     template<class Factory>
     void initialize(Factory& the_factory)
@@ -52,6 +83,8 @@ struct decoder : public kodo_rlnc::decoder
         m_symbol_storage.resize(SuperCoder::block_size());
         SuperCoder::set_mutable_symbols(storage::storage(m_symbol_storage));
     }
+
+protected:
 
     // Data buffer that will be allocated on the Emscripten heap
     std::vector<uint8_t> m_symbol_storage;
