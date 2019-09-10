@@ -29,7 +29,7 @@ def get_tool_options(properties):
 
 
 def configure(properties):
-    command = [sys.executable, 'waf']
+    command = ['python', 'waf']
 
     if properties.get('build_distclean'):
         command += ['distclean']
@@ -55,12 +55,12 @@ def configure(properties):
 
 
 def build(properties):
-    command = [sys.executable, 'waf', 'build', '-v']
+    command = ['python', 'waf', 'build', '-v']
     run_command(command)
 
 
 def run_tests(properties):
-    command = [sys.executable, 'waf', '-v', '--run_tests']
+    command = ['python', 'waf', '-v', '--run_tests']
     run_cmd = None
 
     if properties.get('valgrind_run'):
@@ -75,7 +75,7 @@ def run_tests(properties):
 
 
 def install(properties):
-    command = [sys.executable, 'waf', '-v', 'install']
+    command = ['python', 'waf', '-v', 'install']
 
     if 'install_path' in properties:
         command += ['--install_path={0}'.format(properties['install_path'])]
